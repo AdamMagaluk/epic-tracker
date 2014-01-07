@@ -1,0 +1,47 @@
+<div id="mountain" style="display:none">{{mountain}}</div>
+
+<div id="container" style="min-width: 800; height: 400px; margin: 0 auto"></div>
+
+<script>
+ $(document).ready(function(){
+
+    loadStats($("#mountain").text());
+
+    function loadStats(mnt){
+      var request = $.ajax({
+          url: "/"+mnt+"/stats.json",
+          type: 'get',
+          beforeSend: function(xhr){xhr.setRequestHeader('Accept', 'application/json');}
+      });
+
+      request.done(function (res, textStatus, jqXHR){
+        $('#container').highcharts({
+            title: {
+                text: 'Today',
+                x: -20 //center
+            },
+            yAxis: {
+                title: {
+                    text: 'Lift Rides'
+                },
+            },
+            xAxis : {type : 'datetime'},
+            series: [{
+                name: 'Breck Total',
+                data: res.liftStats
+            },
+            {
+                name: 'Breck Change',
+                data: res.liftDxStats
+            }]
+        });
+
+      });
+      
+      request.fail(function (jqXHR, textStatus, errorThrown){
+        console.error(errorThrown);
+      });
+    }
+
+ });
+</script>
