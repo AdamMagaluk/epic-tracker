@@ -3,7 +3,7 @@ var mongoose  = require('mongoose');
 var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/epic';
 
 mongoose.connect(mongoUrl);
-mongoose.on('error',function(err){
+mongoose.connection.on('error',function(err){
   console.error(err);
   process.exit(101);
 });
