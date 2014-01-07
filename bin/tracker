@@ -18,15 +18,20 @@ var Stat = require('../Stat');
 
 var EPIC_URL = 'https://www.epicmix.com/Activity/';
 
-run();
+run(function(){
+  process.exit(0);
+});
 
-function run(){
+function run(callback){
   console.log(new Date(),'Starting Run')
   async.each(Stat.Mountains,getStats,function done(err,obj){
     if(err)
       console.error(err);
     else 
       console.log(new Date(),'Ran success');
+	
+    if(callback)
+      callback();
   });
 }
 
