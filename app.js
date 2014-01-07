@@ -10,9 +10,6 @@ mongoose.connection.on('error',function(err){
 
 var Stat = require('./Stat');
 
-if(process.env.RUN_WITH_TRACKER)
-  require('./tracker');
-
 /**
  * Module dependencies.
  */

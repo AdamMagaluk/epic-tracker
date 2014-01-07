@@ -1,8 +1,18 @@
+#! /app/bin/node
+
 var request = require('request')
   , cheerio = require('cheerio')
   , mongoose = require('mongoose')
   , async = require('async')
   , Schema = mongoose.Schema;
+
+var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/epic';
+
+mongoose.connect(mongoUrl);
+mongoose.connection.on('error',function(err){
+  console.error(err);
+  process.exit(101);
+});
 
 var Stat = require('./Stat');
 
