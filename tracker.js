@@ -12,6 +12,7 @@ run();
 setInterval(run,5*60*1000);
 
 function run(){
+  console.log(new Date(),'Starting Run')
   async.each(Stat.Mountains,getStats,function done(err,obj){
     if(err)
       console.error(err);
