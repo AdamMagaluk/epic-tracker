@@ -1,11 +1,15 @@
 <div id="mountain" style="display:none">{{mountain}}</div>
 <div id="doy" style="display:none">{{doy}}</div>
 
-<div class="row">  
-  <a class="btn btn-default" href="?doy={{prevDoy}}">Prev Day</a>
-  <a class="btn btn-default" href="?doy={{nextDoy}}">Next Day</a>
-  <font>{{date}}</font>
+<div class="row">
+<div class="col-md-5"></div>
+    <div class="col-md-4">
+      <a class="btn btn-default" href="?doy={{prevDoy}}">Prev Day</a>
+      <a class="btn btn-default" href="?doy={{nextDoy}}">Next Day</a>
+    </div>
+    <div class="col-md-3"></div>
 </div>
+
 
 <div id="container" style="min-width: 800; height: 400px; margin: 0 auto"></div>
 
@@ -25,7 +29,7 @@
       request.done(function (res, textStatus, jqXHR){
         $('#container').highcharts({
             title: {
-                text: 'Today',
+                text: '{{date}}',
                 x: -20 //center
             },
             yAxis: {
