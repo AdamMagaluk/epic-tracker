@@ -1,6 +1,6 @@
 var mongoose  = require('mongoose');
 
-var mongoUrl = process.env.MONGOURL || 'mongodb://localhost/epic';
+var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/epic';
 
 mongoose.connect(mongoUrl);
 
