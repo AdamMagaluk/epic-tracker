@@ -14,12 +14,11 @@ mongoose.connection.on('error',function(err){
   process.exit(101);
 });
 
-var Stat = require('./Stat');
+var Stat = require('../Stat');
 
 var EPIC_URL = 'https://www.epicmix.com/Activity/';
 
 run();
-setInterval(run,5*60*1000);
 
 function run(){
   console.log(new Date(),'Starting Run')
