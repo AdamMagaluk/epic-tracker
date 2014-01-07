@@ -81,13 +81,15 @@ app.get('/:mountain',function(req,res){
     res.statusCode = 404;
     return res.render('error/404');
   }
-
-  res.render('show',{mountain : req.params.mountain, navBar : navBar(req.params.mountain) });
+  var doy = Number(req.query.doy) || new Date().getDOY();
+  var d = new Date(doy*24*60*60*1000);
+  res.render('show',{date : d,prevDoy : doy-1,nextDoy :(doy+1),doy : doy,mountain : req.params.mountain, navBar : navBar(req.params.mountain) });
 });
 
 app.get('/:mountain/stats.json',function(req,res){
 
-  var doy = new Date().getDOY();
+  var doy = req.query.doy || new Date().getDOY();
+
   Stat.find({mountain : req.params.mountain,DoY : doy})
   .sort({date : 1})
   .exec(function(err,docs){
@@ -100,7 +102,10 @@ app.get('/:mountain/stats.json',function(req,res){
       return [s.date.getTime(),s[k]];
     }
 
+    var d = new Date(doy*24*60*60*1000);
+
     var obj = {
+      date : d,
       liftStats : docs.map(mapStat.bind(this,'lifts')),
       liftDxStats : docs.map(mapStat.bind(this,'liftsDx'))
     };

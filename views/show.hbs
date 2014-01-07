@@ -1,15 +1,23 @@
 <div id="mountain" style="display:none">{{mountain}}</div>
+<div id="doy" style="display:none">{{doy}}</div>
+
+<div class="row">  
+  <a class="btn btn-default" href="?doy={{prevDoy}}">Prev Day</a>
+  <a class="btn btn-default" href="?doy={{nextDoy}}">Next Day</a>
+  <font>{{date}}</font>
+</div>
 
 <div id="container" style="min-width: 800; height: 400px; margin: 0 auto"></div>
 
 <script>
  $(document).ready(function(){
 
-    loadStats($("#mountain").text());
+    loadStats($("#mountain").text(),$("#doy").text());
 
-    function loadStats(mnt){
+    function loadStats(mnt,doy){
+
       var request = $.ajax({
-          url: "/"+mnt+"/stats.json",
+          url: "/"+mnt+"/stats.json?doy="+doy,
           type: 'get',
           beforeSend: function(xhr){xhr.setRequestHeader('Accept', 'application/json');}
       });
