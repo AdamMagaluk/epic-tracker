@@ -102,6 +102,7 @@ app.get('/:mountain/stats.json',function(req,res){
     var d = new Date(doy*24*60*60*1000);
 
     var obj = {
+      mountain : req.params.mountain,
       date : d,
       liftStats : docs.map(mapStat.bind(this,'lifts')),
       liftDxStats : docs.map(mapStat.bind(this,'liftsDx'))

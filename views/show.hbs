@@ -32,19 +32,31 @@
                 text: '{{date}}',
                 x: -20 //center
             },
-            yAxis: {
-                title: {
-                    text: 'Lift Rides'
-                },
-            },
+            yAxis: [{
+                        title: {
+                            text: 'Lift Rides'
+                        },
+                        min : 0
+                    },{
+                        title: {
+                            text: 'Change in Lift Rides'
+                        },
+                        opposite : true,
+                        min : 0
+                    }
+            ],
             xAxis : {type : 'datetime'},
             series: [{
-                name: 'Breck Total',
-                data: res.liftStats
+                name: res.mountain+' Total',
+                data: res.liftStats,
+                
             },
             {
-                name: 'Breck Change',
-                data: res.liftDxStats
+                name: res.mountain+' Change',
+                data: res.liftDxStats,
+                yAxis : 1,
+                type: 'spline',
+                marker : {enabled : false}
             }]
         });
 
