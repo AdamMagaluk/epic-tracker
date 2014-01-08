@@ -46,6 +46,17 @@ schema.statics.Mountains = ['MtBrighton',
                  'Kirkwood',
                  'AftonAlps'];
 
+schema.statics.UtcOffsets = {'MtBrighton' : -5,
+                 'Vail' : -7,
+                 'BeaverCreek' : -7,
+                 'Breck' : -7,
+                 'Keystone' : -7,
+                 'Canyons' : -7,
+                 'Heavenly' : -8,
+                 'Northstar' : -8,
+                 'Kirkwood' : -7,
+                 'AftonAlps' : -7};
+
 var Stat = mongoose.model('EpicStat',schema);
 
 schema.pre('save', function (next) {

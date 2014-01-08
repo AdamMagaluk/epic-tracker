@@ -94,9 +94,11 @@ app.get('/:mountain/stats.json',function(req,res){
       return res.send(500);
 
     function mapStat(k,s){
+      var utc = s.date.getTime() + ((Stat.UtcOffsets[req.params.mountain])*60*60*1000);
+      var d = new Date(utc);
       if(s[k] < 0)
-        return [s.date.getTime(),0];
-      return [s.date.getTime(),s[k]];
+        return [d.getTime(),0];
+      return [d.getTime(),s[k]];
     }
 
     var d = new Date(doy*24*60*60*1000);
