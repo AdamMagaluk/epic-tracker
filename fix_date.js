@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/epic');
+var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/epic';
+mongoose.connect(mongoUrl);
 
 var Stat = require('./Stat');
 
@@ -9,6 +10,7 @@ var stream = Stat.find({}).sort({date : 1}).stream();
 stream.on('data', function (doc) {
   stream.pause();
   doc.save(function(){
+    console.log(doc.date,doc.lDate)
     stream.resume();
   });
   // do something with the mongoose document

@@ -87,21 +87,20 @@ app.get('/:mountain/stats.json',function(req,res){
 
   var doy = req.query.doy || new Date().getDOY();
 
-  Stat.find({mountain : req.params.mountain,DoY : doy})
+  Stat.find({mountain : req.params.mountain,lDoY : doy})
   .sort({date : 1})
   .exec(function(err,docs){
     if(err)
       return res.send(500);
 
     function mapStat(k,s){
-      var utc = s.date.getTime() + ((Stat.UtcOffsets[req.params.mountain])*60*60*1000);
-      var d = new Date(utc);
+      var d = s.lDate;
       if(s[k] < 0)
         return [d.getTime(),0];
       return [d.getTime(),s[k]];
     }
 
-    var d = new Date(doy*24*60*60*1000);
+    var d = new Date( (doy*24*60*60*1000) + ((Stat.UtcOffsets[req.params.mountain])*60*60*1000) );
 
     var obj = {
       mountain : req.params.mountain,

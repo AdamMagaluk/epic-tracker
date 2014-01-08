@@ -8,6 +8,7 @@ Date.prototype.getDOY = function() {
 
 var schema = new Schema({
   date : {type : Date,default: Date.now},
+  lDate : {type : Date,default: Date.now},
   mountain : String,
   
   points : {type : Number, default : 0},
@@ -25,7 +26,11 @@ var schema = new Schema({
   DoW : Number,
   DoM : Number,
   HoD : Number,
-  DoY : Number
+  DoY : Number,
+  lDoW : Number,
+  lDoM : Number,
+  lHoD : Number,
+  lDoY : Number
 });
 
 schema.statics.StatNames = [
@@ -60,6 +65,13 @@ schema.statics.UtcOffsets = {'MtBrighton' : -5,
 var Stat = mongoose.model('EpicStat',schema);
 
 schema.pre('save', function (next) {
+
+  this.lDate = new Date((this.date.getTime() + ((Stat.UtcOffsets[this.mountain])*60*60*1000)));
+  this.lDoW = this.lDate.getDay();
+  this.lDoM = this.lDate.getDate();
+  this.lHoD = this.lDate.getHours();
+  this.lDoY = this.lDate.getDOY();
+
   this.DoW = this.date.getDay();
   this.DoM = this.date.getDate();
   this.HoD = this.date.getHours();
