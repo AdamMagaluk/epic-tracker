@@ -10,7 +10,7 @@ var stream = Stat.find({}).sort({date : 1}).stream();
 stream.on('data', function (doc) {
   stream.pause();
   doc.save(function(){
-    console.log(doc.date,doc.lDate)
+    console.log(doc.liftsDx,doc.dt,doc.liftsPm);
     stream.resume();
   });
   // do something with the mongoose document

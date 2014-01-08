@@ -93,7 +93,7 @@ app.get('/:mountain/stats.json',function(req,res){
     if(err)
       return res.send(500);
 
-    function mapStat(k,s){
+    function mapStat(k,s,div){
       var d = s.lDate;
       if(s[k] < 0)
         return [d.getTime(),0];
@@ -106,7 +106,7 @@ app.get('/:mountain/stats.json',function(req,res){
       mountain : req.params.mountain,
       date : d,
       liftStats : docs.map(mapStat.bind(this,'lifts')),
-      liftDxStats : docs.map(mapStat.bind(this,'liftsDx'))
+      liftPmStats : docs.map(mapStat.bind(this,'liftsPm'))
     };
 
     res.send(obj);

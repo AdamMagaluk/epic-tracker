@@ -39,7 +39,7 @@
                         min : 0
                     },{
                         title: {
-                            text: 'Change in Lift Rides'
+                            text: 'Lift Rides/minute'
                         },
                         opposite : true,
                         min : 0
@@ -51,8 +51,8 @@
                 data: res.liftStats,
             },
             {
-                name: res.mountain+' Change',
-                data: res.liftDxStats,
+                name: res.mountain+' Per Minute',
+                data: res.liftPmStats,
                 yAxis : 1,
                 type: 'spline',
                 marker : {enabled : false}

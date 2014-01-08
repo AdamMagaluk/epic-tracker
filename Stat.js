@@ -9,19 +9,24 @@ Date.prototype.getDOY = function() {
 var schema = new Schema({
   date : {type : Date,default: Date.now},
   lDate : {type : Date,default: Date.now},
+  dt : {type : Number,default: 10},
   mountain : String,
   
   points : {type : Number, default : 0},
   pointsDx : {type : Number, default : 0},
+  pointsPm : {type : Number, default : 0},
 
   pins : {type : Number, default : 0},
   pinsDx : {type : Number, default : 0},
+  pinsPm : {type : Number, default : 0},
 
   lifts : {type : Number, default : 0},
   liftsDx : {type : Number, default : 0},
+  liftsPm : {type : Number, default : 0},
 
   photos : {type : Number, default : 0},
   photosDx : {type : Number, default : 0},
+  photosPm : {type : Number, default : 0},
 
   DoW : Number,
   DoM : Number,
@@ -31,6 +36,8 @@ var schema = new Schema({
   lDoM : Number,
   lHoD : Number,
   lDoY : Number
+
+
 });
 
 schema.statics.StatNames = [
@@ -86,8 +93,11 @@ schema.pre('save', function (next) {
           return next();
 
         var s2 = docs[0];
+        self.dt = Math.round((self.date.getTime()-s2.date.getTime())/1000/60);
+
         Stat.StatNames.forEach(function(k){
           self[k+'Dx'] = (self[k]-s2[k]);
+          self[k+'Pm'] = Math.round(self[k+'Dx']/self.dt);
         });
         next();
       });
