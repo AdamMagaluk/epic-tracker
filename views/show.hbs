@@ -47,12 +47,19 @@
             ],
             xAxis : {type : 'datetime'},
             series: [{
-                name: res.mountain+' Total',
+                name: res.dateString+' '+res.mountain+' Total',
                 data: res.liftStats,
             },
             {
-                name: res.mountain+' Per Minute',
+                name: res.dateString+' '+res.mountain+' Per Minute',
                 data: res.liftPmStats,
+                yAxis : 1,
+                type: 'spline',
+                marker : {enabled : false}
+            },
+            {
+                name: 'Previous '+res.mountain+' Per Minute',
+                data: res.yesterday.liftPmStats,
                 yAxis : 1,
                 type: 'spline',
                 marker : {enabled : false}

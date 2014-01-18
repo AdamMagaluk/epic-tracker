@@ -99,6 +99,63 @@ app.get('/:mountain/stats.json',function(req,res){
 
     function mapStat(k,s,div){
       var d = s.lDate;
+
+      if(s[k] < 0)
+        return [d.getTime(),0];
+      return [d.getTime(),s[k]];
+    }
+
+    if(docs[0]){
+      var d = docs[0].lDate;
+    }else{
+      var d = new Date();
+    }
+
+    getYesterday(req.params.mountain,doy,function(err,yesterday){
+      if(err)
+        return res.send(500);
+
+      var obj = {
+        mountain : req.params.mountain,
+        dateString : d.toDateString(),
+        liftStats : docs.map(mapStat.bind(this,'lifts')),
+        liftPmStats : docs.map(mapStat.bind(this,'liftsPm')),
+        yesterday : yesterday
+      };
+
+      res.send(obj);
+    });
+  });
+});
+
+function filterOutliers(data){
+  data.forEach(function(d,idx){
+    var pD = data[idx-1];
+    if(!pD)
+      return;
+
+    if(pD.liftsDx < 0 && d.liftsDx > 0){
+      data.splice(idx-1,2);
+    }else if(d.liftsDx > 1500){
+      data.splice(idx,1);
+    }
+  });
+  return data;
+}
+
+function getYesterday(mountain,doy,callback){
+  
+  Stat.find({mountain : mountain,lDoY : doy-1, lHoD : { $gte : 5,$lte : 23 } } )
+  .sort({date : 1})
+  .exec(function(err,docs){
+    if(err)
+      return callback(err);
+
+    docs = filterOutliers(docs);
+
+    function mapStat(k,s,div){
+      var d = s.lDate;
+      d = new Date(d.getTime()+(24*60*60*1000));
       if(s[k] < 0)
         return [d.getTime(),0];
       return [d.getTime(),s[k]];
@@ -111,27 +168,12 @@ app.get('/:mountain/stats.json',function(req,res){
     }
 
     var obj = {
-      mountain : req.params.mountain,
-      dateString : d.toDateString(),
       liftStats : docs.map(mapStat.bind(this,'lifts')),
       liftPmStats : docs.map(mapStat.bind(this,'liftsPm'))
     };
 
-    res.send(obj);
-  })
-});
-
-function filterOutliers(data){
-  data.forEach(function(d,idx){
-    var pD = data[idx-1];
-    if(!pD)
-      return;
-
-    if(pD.liftsDx < 0 && d.liftsDx > 0){
-      data.splice(idx-1,2);
-    }
+    return callback(null,obj);
   });
-  return data;
 }
 
 http.createServer(app).listen(app.get('port'), function(){
