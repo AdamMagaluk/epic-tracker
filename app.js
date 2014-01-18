@@ -79,19 +79,23 @@ app.get('/:mountain',function(req,res){
     return res.render('error/404');
   }
   var doy = Number(req.query.doy) || new Date().getDOY();
+  
   var d = new Date(doy*24*60*60*1000);
-  res.render('show',{date : d,prevDoy : doy-1,nextDoy :(doy+1),doy : doy,mountain : req.params.mountain, navBar : navBar(req.params.mountain) });
+
+  res.render('show',{dateString : d,prevDoy : doy-1,nextDoy :(doy+1),doy : doy,mountain : req.params.mountain, navBar : navBar(req.params.mountain) });
 });
 
 app.get('/:mountain/stats.json',function(req,res){
 
   var doy = req.query.doy || new Date().getDOY();
 
-  Stat.find({mountain : req.params.mountain,lDoY : doy})
+  Stat.find({mountain : req.params.mountain,lDoY : doy, lHoD : { $gte : 5,$lte : 23 } } )
   .sort({date : 1})
   .exec(function(err,docs){
     if(err)
       return res.send(500);
+
+    docs = filterOutliers(docs);
 
     function mapStat(k,s,div){
       var d = s.lDate;
@@ -100,11 +104,15 @@ app.get('/:mountain/stats.json',function(req,res){
       return [d.getTime(),s[k]];
     }
 
-    var d = new Date( (doy*24*60*60*1000) + ((Stat.UtcOffsets[req.params.mountain])*60*60*1000) );
+    if(docs[0]){
+      var d = docs[0].lDate;
+    }else{
+      var d = new Date();
+    }
 
     var obj = {
       mountain : req.params.mountain,
-      date : d,
+      dateString : d.toDateString(),
       liftStats : docs.map(mapStat.bind(this,'lifts')),
       liftPmStats : docs.map(mapStat.bind(this,'liftsPm'))
     };
@@ -112,6 +120,19 @@ app.get('/:mountain/stats.json',function(req,res){
     res.send(obj);
   })
 });
+
+function filterOutliers(data){
+  data.forEach(function(d,idx){
+    var pD = data[idx-1];
+    if(!pD)
+      return;
+
+    if(pD.liftsDx < 0 && d.liftsDx > 0){
+      data.splice(idx-1,2);
+    }
+  });
+  return data;
+}
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Server listening on port " + app.get('port'));

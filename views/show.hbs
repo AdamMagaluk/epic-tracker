@@ -27,9 +27,9 @@
       });
 
       request.done(function (res, textStatus, jqXHR){
-        $('#container').highcharts({
+        var chart = $('#container').highcharts({
             title: {
-                text: '{{date}}',
+                text: res.dateString,
                 x: -20 //center
             },
             yAxis: [{
