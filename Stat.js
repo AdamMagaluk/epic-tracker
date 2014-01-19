@@ -7,8 +7,8 @@ Date.prototype.getDOY = function() {
 }
 
 var schema = new Schema({
-  date : {type : Date,default: Date.now},
-  lDate : {type : Date,default: Date.now},
+  date : {type : Date,default: Date.now,index : true},
+  lDate : {type : Date,default: Date.now,index : true},
   dt : {type : Number,default: 10},
   mountain : String,
   
@@ -30,14 +30,12 @@ var schema = new Schema({
 
   DoW : Number,
   DoM : Number,
-  HoD : Number,
+  HoD : {type : Number,index : true},
   DoY : Number,
   lDoW : Number,
   lDoM : Number,
   lHoD : Number,
   lDoY : Number
-
-
 });
 
 schema.statics.StatNames = [

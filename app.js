@@ -68,6 +68,8 @@ function navBar(sel){
   return navs;
 }
 
+require('./stats_resource')(app);
+
 app.get('/',function(req,res){
   res.redirect('/MtBrighton');
 });
