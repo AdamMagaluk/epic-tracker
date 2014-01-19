@@ -1,24 +1,26 @@
 var cache = require('memory-cache');
+var async = require('async');
 var Stat = require('./Stat');
 var stats = require('./lib/stats');
 
-
-
 module.exports = function(app){
-  app.get('/stats/:mountain',handleStats);
+  app.get('/stats/all',handleStats);
 };
 
-function hash(mountain){
-  return 'mt-' + mountain;
+
+function getStat(mountain,callback){
+  stats.currentBusyIndex(mountain,function(err,obj){
+    if(err)
+      return callback(err);
+
+    obj.mountain = mountain;
+    callback(null,obj);
+  });
 }
 
-function handleStats(req,res){
-  if(Stat.Mountains.indexOf(req.params.mountain) == -1){
-    res.statusCode = 404;
-    return res.send();
-  }
 
-  var k = hash(req.params.mountain);
+function handleStats(req,res){
+  var k = 'all-stats';
   var v = cache.get(k);
   if(v !== null)
     return respond(v);
@@ -29,13 +31,13 @@ function handleStats(req,res){
     res.send(obj);
   }
 
-  stats.currentBusyIndex(req.params.mountain,function(err,obj){
+  async.map(Stat.Mountains,getStat,function(err,results){
     if(err){
       res.statusCode = 500;
-      return res.send();
+      return res.send({});
     }
-
-    cache.put(k,obj,5*60*1000);
-    respond(obj);
+    
+    cache.put(k,results,5*60*1000);
+    respond(results);
   });
 }
