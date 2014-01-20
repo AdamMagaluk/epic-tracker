@@ -16,6 +16,7 @@ var Stat = require('./Stat');
 var express = require('express')
   , http = require('http')
   , path = require('path')
+  , cors = require('cors')
   , hbs = require('./lib/hbshelpers')
   , path = require('path');
 
@@ -36,6 +37,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
 
+  app.use(cors());
   app.use(app.router);
 
   app.use(function(req, res, next){
