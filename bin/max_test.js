@@ -8,9 +8,9 @@ mongoose.connection.on('error',function(err){
   process.exit(101);
 });
 
-var stats = require('./lib/stats');
+var stats = require('../lib/stats');
 
-stats.currentBusyIndex('Breck',function(err,obj){
+stats.currentBusyIndex('MtBrighton',function(err,obj){
   console.log(err);
   console.log(obj)
 });
